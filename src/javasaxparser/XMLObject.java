@@ -6,6 +6,7 @@
 package javasaxparser;
 
 import java.util.ArrayList;
+import org.xml.sax.Attributes;
 
 /**
  *
@@ -16,7 +17,8 @@ public class XMLObject {
     private String name = null;
     private String content = null;
     
-    public XMLObject() {
+    public XMLObject(String name) {
+        this.name = name;
         children = new ArrayList<>();
     }
     

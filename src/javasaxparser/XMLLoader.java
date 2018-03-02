@@ -19,15 +19,15 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XMLLoader {
     public static XMLObject load(File xmlCourseFile) throws Exception {
-        XMLObject root = new XMLObject();
+        XMLObject root = new XMLObject("root");
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             
             DefaultHandler handler = new DefaultHandler() {
-                ArrayList<XMLObject> stack = new ArrayList<>();
-                XMLObject currentNode;
-                boolean isRootSet = false;
+                private ArrayList<XMLObject> stack = new ArrayList<>();
+                private XMLObject currentNode;
+                private boolean isRootSet = false;
                 
                 @Override
                 public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -39,16 +39,15 @@ public class XMLLoader {
                         return;     
                     } 
                     
-                    XMLObject node = new XMLObject();
-                    node.setName(qName);
-                    stack.add(0, node);    
+                    XMLObject node = new XMLObject(qName);
+                    stack.add(0, node);
                     currentNode.addChild(node);
                     currentNode = node;
                 }
                 
                 @Override
                 public void endElement(String uri, String localName, String qName) throws SAXException {
-                    XMLObject poppedNode = stack.remove(0);                    
+                    stack.remove(0);                
                     
                     if(!stack.isEmpty()){
                         currentNode = stack.get(0);
@@ -69,6 +68,6 @@ public class XMLLoader {
             throw e;
         }
         
-      return root; 
+        return root; 
     }
 }
