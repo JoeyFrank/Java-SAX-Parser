@@ -34,23 +34,26 @@ public class XMLLoader {
                     if(!isRootSet){
                         root.setName(qName);
                         stack.add(0, root);
+                        currentNode = root;
                         isRootSet = true;
                         return;     
                     } 
                     
-                    currentNode = new XMLObject();
-                    currentNode.setName(qName);
-                    stack.add(0, currentNode);                                       
+                    XMLObject node = new XMLObject();
+                    node.setName(qName);
+                    stack.add(0, node);    
+                    currentNode.addChild(node);
+                    currentNode = node;
                 }
                 
                 @Override
                 public void endElement(String uri, String localName, String qName) throws SAXException {
                     XMLObject poppedNode = stack.remove(0);                    
-                    if(currentNode.equals(poppedNode) && currentNode.getName() == qName){                   
+                    
+                    if(!stack.isEmpty()){
                         currentNode = stack.get(0);
-                        currentNode.addChild(poppedNode);
                     } else {
-                        throw new SAXException("Popped item does not equal current item");
+                        currentNode = null;
                     }
                 }
                 

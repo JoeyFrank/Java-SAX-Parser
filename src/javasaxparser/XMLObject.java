@@ -42,7 +42,7 @@ public class XMLObject {
         if(this.content == null){
             this.content = content;
         } else {
-            this.content = this.content.concat(name);
+            this.content = this.content.concat(content);
         }
     }
     

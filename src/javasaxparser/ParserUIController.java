@@ -12,8 +12,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 
 /**
@@ -21,38 +20,53 @@ import javafx.stage.FileChooser;
  * @author Joey
  */
 public class ParserUIController implements Initializable {
+    @FXML
+    private TextArea textArea;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }
-    
-    @FXML
-    private ScrollPane scrollPane;
-    
+
     @FXML
     private void handleOpen(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(scrollPane.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(textArea.getScene().getWindow());
         if (file != null) {
             try
             {
                 XMLObject root = XMLLoader.load(file);
-                ArrayList<XMLObject> nodes = root.getChildren();
-//                for (Student student : students) {
-//                    textArea.appendText(Integer.toString(student.getId()) + "\n");
-//                    textArea.appendText(student.getPawprint() + "\n");
-//                    textArea.appendText(student.getFirstName() + "\n");
-//                    textArea.appendText(student.getLastName() + "\n");
-//                    textArea.appendText(Double.toString(student.getGrade()) + "\n");
-//                    textArea.appendText("-------------------------\n");
-//                }
-                
+                textArea.clear();
+                generateInterfaceFromRoot(root, 0);
                 
             } catch (Exception ex) {
                 System.out.println("Exception parsing XML file: " + ex.toString());
+                
+            }
+        }
+    }   
+    
+    private void generateInterfaceFromRoot(XMLObject root, int indent){
+        textArea.appendText(root.getName());
+        String content = "";
+        content = content + (root.getContent());
+        
+        //Output cleanup
+        content = content.trim().replace("\n", "").replace("\t", "").replaceAll("\\ +"," ");
+        
+        if(!content.isEmpty()){
+            textArea.appendText(" = \"" + content + "\"");
+        }
+        
+        textArea.appendText("\n");
+        
+        ArrayList<XMLObject> children = root.getChildren();
+        if(!children.isEmpty()){
+            for(XMLObject child: children){
+                for(int i=0;i<=indent;i++){
+                    textArea.appendText("     | ");
+                }
+                generateInterfaceFromRoot(child, (indent+1));
             }
         }
     }
-    
 }
