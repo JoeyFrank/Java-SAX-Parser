@@ -14,7 +14,7 @@ import org.xml.sax.Attributes;
  */
 public class XMLObject {
     private ArrayList<XMLObject> children;
-    private String name = null;
+    private String name;
     private String content = null;
     
     public XMLObject(String name) {
@@ -31,9 +31,7 @@ public class XMLObject {
     }
     
     public void setName(String name){
-        if(this.name == null){
-            this.name = name;
-        }
+        this.name = name;
     }
     
     public String getName(){
